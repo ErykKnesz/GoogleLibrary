@@ -1,0 +1,78 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+    </div>
+    <div class="col">
+
+    </div>
+    <div class="col">
+
+    </div>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Author</th>
+      <th scope="col">Title</th>
+      <th scope="col">Published</th>
+      <th scope="col">ISBN</th>
+      <th scope="col">Pages</th>
+      <th scope="col">Cover</th>
+      <th scope="col">Language</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for book in books %}
+    <tr>
+      <th scope="row">{{loop.index}}</th>
+      <td>{{ book.author }}</td>
+      <td>{{ book.title }}</td>
+      <td>{{ book.published_date }}</td>
+      <td>{{ book.ISBN }}</td>
+      <td>{{ book.num_pages }}</td>
+      <td>{{ book.cover_url }}</td>
+      <td>{{ book.language }}</td>
+    </tr>
+  {% endfor %}
+    <tr>
+      <th scope="row"></th>
+      <td>
+        <form class="form-inline" action="{{ url_for('homepage')}}" method="GET">
+          <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Author" aria-label="Search" name="author"
+      </td>
+      <td>
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Title" aria-label="Search" name="title">
+      </td>
+      <td>
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Published" aria-label="Search" name="published_date">
+      </td>
+      <td>
+        <input class="form-control mr-sm-2" type="number" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="ISBN" aria-label="Search" name="ISBN">
+      </td>
+      <td>
+        <input class="form-control mr-sm-2" type="number" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Pages" aria-label="Search" name="num_pages">
+      </td>
+      <td>
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Cover" aria-label="Search" name="cover_url">
+      </td>
+      <td>
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Language" aria-label="Search" name="language">
+      </td>
+      <td>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </td>
+      </form>
+    </tr>
+  </tbody>
+</table>
+
+
+{% endblock %}
