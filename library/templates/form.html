@@ -13,8 +13,8 @@
         {{ form.author(class_="form-control") }}
     </div>
     <div class="form-group">
-        <label for="published_date">Published in (year)</label>
-        {{ form.published_date(class_="form-control") }}
+        <label for="published_date">Publication date</label>
+        {{ form.published_date(class_="form-control", placeholder="YYYY-MM-DD") }}
     </div>
     <div class="form-group">
         <label for="ISBN">ISBN</label>
@@ -32,7 +32,11 @@
         <label for="language">Language of the book</label>
         {{ form.language(class_="form-control") }}
     </div>
+    {% if book_id %}
+    <button type="submit" class="btn btn-primary mt-5">Edit book</button>
+    {% else %}
     <button type="submit" class="btn btn-primary mt-5">Add book</button>
+    {% endif %}
 </form>
 
 

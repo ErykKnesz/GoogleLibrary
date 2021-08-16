@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash
+from datetime import date
 from library import app, db
 from library.models import Book
 from library.forms import BookForm
@@ -20,17 +21,23 @@ def add_or_edit_book(book_id, book, form):
             errors = form.errors
             flash(f"Oops... See the following errors: {errors}", 'danger')
     return render_template(
-        'form.html', form=form, errors=errors, entry_id=book_id)
+        'form.html', form=form, errors=errors, book_id=book_id)
 
 
 @app.route('/', methods=['GET'])
 def homepage():
     filters = {key: value for key, value in request.args.items() if value}
     if filters:
-        books = Book.query.filter_by(**filters).order_by(
-            Book.author.asc())
+        min_date = filters.pop('min date', date(1, 1, 1))
+        max_date = filters.pop('max date', date(9999, 1, 1))
+        books = Book.query.filter_by(**filters).filter(
+            Book.published_date.between(
+                min_date, max_date)
+        ).order_by(Book.author.asc())
     else:
-        books = Book.query.all() #order_by(Book.author.asc())
+        books = Book.query.all()
+        books.sort(key=lambda x:x.author)
+        print(books)
     return render_template('homepage.html', books=books)
 
 

@@ -5,7 +5,7 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False, unique=True)
     author = db.Column(db.String(80), nullable=False)
-    published_date = db.Column(db.String(4), nullable=False)
+    published_date = db.Column(db.Date(), nullable=False)
     ISBN = db.Column(db.Integer, nullable=False, unique=True)
     num_pages = db.Column(db.Integer, nullable=False)
     cover_url = db.Column(db.Text)
