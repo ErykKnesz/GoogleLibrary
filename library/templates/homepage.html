@@ -57,8 +57,9 @@
         <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Title" aria-label="Search" name="title">
       </td>
       <td>
-        <input class="form-control mr-sm-2" type="date" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Published" aria-label="Search" name="min date">
-        <input class="form-control mr-sm-2" type="date" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Published" aria-label="Search" name="max date">
+
+        <a>From</a><input class="form-control mr-sm-2" type="date" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Published" aria-label="Search" name="min date">
+        <a>To</a><input class="form-control mr-sm-2" type="date" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Published" aria-label="Search" name="max date">
       </td>
       <td>
         <input class="form-control mr-sm-2" type="number" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="ISBN" aria-label="Search" name="ISBN">
