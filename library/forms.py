@@ -36,4 +36,11 @@ class BookForm(FlaskForm):
         except AttributeError:
             raise ValidationError(f"Not a valid number {original_isbn}")
 
+    def validate_language(form, field):
+        lang = field.data
+        if len(lang) != 2:
+            message = "Please use 2-letter language codes, e.g" \
+                      "as per the standard ISO 639-1"
+            raise ValidationError(message)
+
 

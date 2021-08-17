@@ -63,18 +63,13 @@ def edit_book(book_id):
     return add_or_edit_book(book_id, book, form)
 
 
-@app.route("/search-google-api", methods=['GET', 'POST'])
+@app.route("/search-google-api", methods=['GET'])
 def search_google_api():
     search_query = request.args
-    results = ""
     if search_query:
         results = gsf.search(search_query)
-        if results['totalItems'] > 0:
-            results = results['items']
-    if results:
-        return render_template('results.html', results=results)
-    if request.method == 'POST':
-        pass
+        if results:
+            gsf.results_to_db(results)
+            return redirect(url_for('homepage'))
     return render_template('google_search_form.html',
-                           search_query=search_query,
-    )
+                           search_query=search_query)
