@@ -35,7 +35,7 @@
       <th scope="row">{{loop.index}}</th>
       <td>{{ book.author }}</td>
       <td>{{ book.title }}</td>
-      <td>{{ book.published_date }}</td>
+      <td>{{ book.published_date.strftime('%Y') }}</td>
       <td>{{ book.ISBN }}</td>
       <td>{{ book.num_pages }}</td>
       <td><a href="{{ book.cover_url }}">{{ book.cover_url }}</a></td>

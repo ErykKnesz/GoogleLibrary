@@ -31,7 +31,8 @@ class BookForm(FlaskForm):
             if isbn == 10 or isbn == 13:
                 pass
             else:
-                message = f"A valid ISBN number is comprised of 10 or 13 digits. Currently {isbn}"
+                message = f"A valid ISBN number is comprised of " \
+                          f"10 or 13 digits. Currently {isbn}"
                 raise ValidationError(message)
         except AttributeError:
             raise ValidationError(f"Not a valid number {original_isbn}")
@@ -39,8 +40,6 @@ class BookForm(FlaskForm):
     def validate_language(form, field):
         lang = field.data
         if len(lang) != 2:
-            message = "Please use 2-letter language codes, e.g" \
+            message = "Please use 2-letter language codes, e.g " \
                       "as per the standard ISO 639-1"
             raise ValidationError(message)
-
-

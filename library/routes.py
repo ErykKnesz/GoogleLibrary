@@ -73,7 +73,7 @@ def search_google_api():
 @app.route("/api/v1/books", methods=['GET'])
 def get_expenses():
     allowed_filters = ['title', 'author', 'published_date', 'ISBN',
-                       'num_pages','cover_url', 'language']
+                       'num_pages', 'cover_url', 'language']
     for filter in request.args.keys():
         if filter not in allowed_filters:
             abort(400)
@@ -97,4 +97,3 @@ def bad_request(error):
     return make_response(
         jsonify({'error': 'Bad request', 'status_code': 400}), 400
     )
-
