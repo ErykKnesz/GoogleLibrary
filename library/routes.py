@@ -1,9 +1,10 @@
-from flask import render_template, request, redirect, url_for, flash, jsonify
-from datetime import date
+from flask import (render_template, request, redirect, url_for, flash,
+                   jsonify, abort, make_response)
 from library import app, db
 from library.models import Book
 from library.forms import BookForm
 import google_api_client as gsf
+import database_service as ds
 
 
 def add_or_edit_book(book_id, book, form):
@@ -26,17 +27,11 @@ def add_or_edit_book(book_id, book, form):
 
 @app.route('/', methods=['GET'])
 def homepage():
-    filters = {key: value for key, value in request.args.items() if value}
-    if filters:
-        min_date = filters.pop('min date', date(1, 1, 1))
-        max_date = filters.pop('max date', date(9999, 1, 1))
-        books = Book.query.filter_by(**filters).filter(
-            Book.published_date.between(
-                min_date, max_date)
-        ).order_by(Book.author.asc())
-    else:
-        books = Book.query.all()
+    books = ds.get_books(request)
+    if isinstance(books, list):
         books.sort(key=lambda x: x.author)
+    else:
+        books.order_by(Book.author.asc())
     return render_template('homepage.html', books=books)
 
 
@@ -77,17 +72,13 @@ def search_google_api():
 
 @app.route("/api/v1/books", methods=['GET'])
 def get_expenses():
-    filters = {key: value for key, value in request.args.items() if value}
-    if filters:
-        min_date = filters.pop('min date', date(1, 1, 1))
-        max_date = filters.pop('max date', date(9999, 1, 1))
-        books = Book.query.filter_by(**filters).filter(
-            Book.published_date.between(
-                min_date, max_date)
-        )
-        books = list(books)
-    else:
-        books = Book.query.all()
+    allowed_filters = ['title', 'author', 'published_date', 'ISBN',
+                       'num_pages','cover_url', 'language']
+    for filter in request.args.keys():
+        if filter not in allowed_filters:
+            abort(400)
+    books = ds.get_books(request)
+    books = list(books)
     for index, book in enumerate(books):
         books[index] = {
             'title': book.title,
@@ -99,3 +90,11 @@ def get_expenses():
             'language': book.language
         }
     return jsonify(books)
+
+
+@app.errorhandler(400)
+def bad_request(error):
+    return make_response(
+        jsonify({'error': 'Bad request', 'status_code': 400}), 400
+    )
+
