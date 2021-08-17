@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+
+{% block content %}
+<form method="POST" action="{{ url_for('search_google_api') }}">
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary mt-5">Import to the database</button>
+    </div>
+</form>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Results</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for result in results %}
+            <tr>
+              <td scope="row">{{loop.index}}</td>
+              <td>{{ result['volumeInfo'] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+{% endblock %}

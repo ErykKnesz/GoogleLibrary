@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<h2 class="mt-5">Search and import</h2>
+
+<h3 class="mt-5">Search</h3>
+<form method="GET" action="{{ url_for('search_google_api') }}">
+    <div class="form-group">
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search" aria-label="General Search" name="q">
+        <h4 class="mt-5">Add keywords if you wish</h4>
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="intitle:" aria-label="intitle:" name="intitle:">
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="inauthor:" aria-label="inauthor:" name="inauthor:">
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="inpublisher:" aria-label="inpublisher:" name="inpublisher:">
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="subject:" aria-label="subject:" name="subject:">
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="ISBN:" aria-label="isbn:" name="isbn:">
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="LCCN:" aria-label="lccn:" name="lccn:">
+        <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="OCLC:" aria-label="oclc:" name="oclc:">
+        <button type="submit" class="btn btn-primary mt-5">Search Google Books</button>
+    </div>
+</form>
+{% endblock content %}

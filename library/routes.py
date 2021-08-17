@@ -3,12 +3,12 @@ from datetime import date
 from library import app, db
 from library.models import Book
 from library.forms import BookForm
+import google_api_client as gsf
 
 
 def add_or_edit_book(book_id, book, form):
     errors = None
     if request.method == 'POST':
-
         if form.validate_on_submit() and book_id:
             form.populate_obj(book)
             db.session.commit()
@@ -36,8 +36,7 @@ def homepage():
         ).order_by(Book.author.asc())
     else:
         books = Book.query.all()
-        books.sort(key=lambda x:x.author)
-        print(books)
+        books.sort(key=lambda x: x.author)
     return render_template('homepage.html', books=books)
 
 
@@ -62,3 +61,20 @@ def edit_book(book_id):
     book = Book.query.filter_by(id=book_id).first_or_404()
     form = BookForm(obj=book)
     return add_or_edit_book(book_id, book, form)
+
+
+@app.route("/search-google-api", methods=['GET', 'POST'])
+def search_google_api():
+    search_query = request.args
+    results = ""
+    if search_query:
+        results = gsf.search(search_query)
+        if results['totalItems'] > 0:
+            results = results['items']
+    if results:
+        return render_template('results.html', results=results)
+    if request.method == 'POST':
+        pass
+    return render_template('google_search_form.html',
+                           search_query=search_query,
+    )
