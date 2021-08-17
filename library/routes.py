@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from datetime import date
 from library import app, db
 from library.models import Book
@@ -73,3 +73,29 @@ def search_google_api():
             return redirect(url_for('homepage'))
     return render_template('google_search_form.html',
                            search_query=search_query)
+
+
+@app.route("/api/v1/books", methods=['GET'])
+def get_expenses():
+    filters = {key: value for key, value in request.args.items() if value}
+    if filters:
+        min_date = filters.pop('min date', date(1, 1, 1))
+        max_date = filters.pop('max date', date(9999, 1, 1))
+        books = Book.query.filter_by(**filters).filter(
+            Book.published_date.between(
+                min_date, max_date)
+        )
+        books = list(books)
+    else:
+        books = Book.query.all()
+    for index, book in enumerate(books):
+        books[index] = {
+            'title': book.title,
+            'author': book.author,
+            'published date': book.published_date.strftime('%Y-%m-%d'),
+            'ISBN': book.ISBN,
+            'page count': book.num_pages,
+            'cover url': book.cover_url,
+            'language': book.language
+        }
+    return jsonify(books)

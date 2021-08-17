@@ -36,7 +36,7 @@ def results_to_db(results):
             pub_date = datetime.strptime(pub_date, '%Y-%m-%d')
         except ValueError:
             try:
-                pub_date = datetime.strptime(pub_date, '%Y', '%m')
+                pub_date = datetime.strptime(pub_date, '%Y-%m')
             except ValueError:
                 pub_date = datetime.strptime(pub_date, '%Y')
         try:
