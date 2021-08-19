@@ -1,19 +1,23 @@
 from werkzeug.routing import ValidationError
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, TextAreaField, DateField
+from wtforms import (StringField, IntegerField, TextAreaField,
+                     DateField, HiddenField)
 from wtforms.validators import InputRequired, URL, Optional
 from library.models import Book
 
 
 def unique_check(form, field):
     filter = {field.name: field.data}
-    if Book.query.filter_by(**filter).first():
-        message = f"This {field.name} '{field.data}' " \
-                  f"already exists in the database"
-        raise ValidationError(message)
+    book = Book.query.filter_by(**filter).first()
+    if book:
+        if book.id == form.id.data:
+            message = f"This {field.name} '{field.data}' " \
+                      f"already exists in the database"
+            raise ValidationError(message)
 
 
 class BookForm(FlaskForm):
+    id = HiddenField('id')
     title = StringField('Title', validators=[InputRequired(), unique_check])
     author = StringField('author', validators=[InputRequired()])
     published_date = DateField('Published date', validators=[
