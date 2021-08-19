@@ -3,7 +3,7 @@ from flask import (render_template, request, redirect, url_for, flash,
 from library import app, db
 from library.models import Book
 from library.forms import BookForm
-import google_api_client as gsf
+import google_api_client as gac
 import database_service as ds
 
 
@@ -62,16 +62,16 @@ def edit_book(book_id):
 def search_google_api():
     search_query = request.args
     if search_query:
-        results = gsf.search(search_query)
+        results = gac.search(search_query)
         if results:
-            gsf.results_to_db(results)
+            gac.results_to_db(results)
             return redirect(url_for('homepage'))
     return render_template('google_search_form.html',
                            search_query=search_query)
 
 
 @app.route("/api/v1/books", methods=['GET'])
-def get_expenses():
+def get_books():
     allowed_filters = ['title', 'author', 'published_date', 'ISBN',
                        'num_pages', 'cover_url', 'language']
     for filter in request.args.keys():

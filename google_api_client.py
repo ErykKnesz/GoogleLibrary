@@ -13,7 +13,6 @@ def call_google_api(endpoint):
 
 def results_to_db(results):
     for result in results:
-        print(result)
         book = result['volumeInfo']
         try:
             title = book['title']
