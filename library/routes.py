@@ -11,30 +11,16 @@ def add_or_edit_book(book, form, book_id=None):
     errors = None
     if request.method == 'POST':
         if form.validate_on_submit() and book_id:
-            form.authors.data = form.authors.data.split(", ")
-
-            for i, name in enumerate(form.authors.data):
-                author = Author.query.filter_by(name=name).first()
-                if author:
-                    form.authors.data[i] = author
-                else:
-                    author = Author(name=name)
-                    db.session.add(author)
-                    db.session.commit()
-                    form.authors.data[i] = author
-            book.authors = form.authors.data
+            form.authors.data = ds.preprocess_form_authors(form)
             form.populate_obj(book)
             db.session.commit()
             return redirect(url_for('homepage'))
         elif form.validate_on_submit():
             db.session.add(book)
-            authors = form.authors.data.split(',')
+            authors = ds.preprocess_form_authors(form)
             for author in authors:
-                a = Author(name=author)
-                db.session.commit()
-                book.authors.append(a)
+                book.authors.append(author)
             db.session.commit()
-
             flash("Yeah, thanks!", 'success')
         else:
             errors = form.errors

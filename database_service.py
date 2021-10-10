@@ -11,13 +11,17 @@ def get_books(request):
         name = filters.pop('authors')
         filters['name'] = name
     if filters:
-
+        min_date = filters.pop('min date', date(1, 1, 1))
+        max_date = filters.pop('max date', date(9999, 1, 1))
         if search_type == 'filter':
-            min_date = filters.pop('min date', date(1, 1, 1))
-            max_date = filters.pop('max date', date(9999, 1, 1))
-            books = Book.query.join(Book.authors).filter_by(
-                **filters).filter(Book.published_date.between(
-                    min_date, max_date)).all()
+            if 'name' in filters:
+                name = filters.pop('name')
+            books = Book.query.filter_by(
+                **filters)
+            try:
+                books = books.join(Book.authors).filter_by(name=name)
+            except UnboundLocalError:
+                pass
 
         elif search_type == 'search':
             search_args = []
@@ -29,9 +33,24 @@ def get_books(request):
                         q = col.ilike('%%%s%%' % v)
                         search_args.append(q)
             books = Book.query.join(Book.authors).filter(
-                or_(*search_args)).all()
+                or_(*search_args))
 
+        books = books.filter(Book.published_date.between(
+                    min_date, max_date)).all()
     else:
         books = Book.query.all()
     return books
 
+
+def preprocess_form_authors(form):
+    form.authors.data = form.authors.data.split(', ')
+    for i, name in enumerate(form.authors.data):
+        author = Author.query.filter_by(name=name).first()
+        if author:
+            form.authors.data[i] = author
+        else:
+            author = Author(name=name)
+            db.session.add(author)
+            db.session.commit()
+            form.authors.data[i] = author
+    return form.authors.data
