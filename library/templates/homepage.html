@@ -20,7 +20,7 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Author</th>
+      <th scope="col">Authors</th>
       <th scope="col">Title</th>
       <th scope="col">Published</th>
       <th scope="col">ISBN</th>
@@ -33,7 +33,12 @@
   {% for book in books %}
     <tr>
       <th scope="row">{{loop.index}}</th>
-      <td>{{ book.author }}</td>
+      <td>
+        {% for author in book.authors %}
+          {{author.name}}{{ ", " if not loop.last else "" }}
+
+        {% endfor %}
+      </td>
       <td>{{ book.title }}</td>
       <td>{{ book.published_date.strftime('%Y') }}</td>
       <td>{{ book.ISBN }}</td>
@@ -51,7 +56,7 @@
       <th scope="row"></th>
       <td>
         <form class="form-inline" action="{{ url_for('homepage')}}" method="GET">
-          <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Author" aria-label="Search" name="author"
+          <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Author" aria-label="Search" name="authors">
       </td>
       <td>
         <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Title" aria-label="Search" name="title">
@@ -74,7 +79,8 @@
         <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Language" aria-label="Search" name="language">
       </td>
       <td>
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <button class="btn btn-outline-success" type="submit" name="search" value="filter">Filter</button>
+        <button class="btn btn-outline-success" type="submit" name="search" value="search">Search</button>
       </td>
       </form>
     </tr>

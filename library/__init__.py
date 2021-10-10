@@ -15,5 +15,6 @@ from library import routes, models
 def make_shell_context():
     return {
         "db": db,
-        "Book": models.Book
+        "Book": models.Book,
+        "Author": models.Author
     }

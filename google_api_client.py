@@ -1,5 +1,5 @@
 import requests
-from library.models import Book
+from library.models import Book, Author
 from library import db
 from datetime import datetime
 
@@ -17,10 +17,11 @@ def results_to_db(results):
         try:
             title = book['title']
             isbn = book['industryIdentifiers'][0]['identifier']
-            a = ""
+            authors = []
             for author in book['authors']:
-                a += f"{author}, "
-            a = a[:-2]
+                a = Author(name=author)
+                db.session.commit()
+                authors.append(a)
             pub_date = book['publishedDate']
             num_pages = book['pageCount']
             language = book['language']
@@ -44,7 +45,7 @@ def results_to_db(results):
             cover_url = ""
 
         b = Book(title=title,
-                 author=a,
+                 authors=authors,
                  published_date=pub_date,
                  ISBN=isbn,
                  num_pages=num_pages,

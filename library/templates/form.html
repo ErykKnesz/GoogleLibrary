@@ -16,8 +16,12 @@
         {{ form.title(class_="form-control") }}
     </div>
     <div class="form-group">
-        <label for="author">Author</label>
-        {{ form.author(class_="form-control") }}
+        <label for="authors">Authors (use comma as a separator)</label>
+            {% if book_id %}
+                <input class="form-control" id="authors" name="authors" required="" type="text" value="{% for a in book.authors %}{{ a.name }}{{ ", " if not loop.last else "" }}{% endfor %}">
+            {% else %}
+                {{ form.authors(class_="form-control") }}
+            {% endif %}
     </div>
     <div class="form-group">
         <label for="published_date">Publication date</label>
