@@ -8,7 +8,10 @@ This is a little library app built to store data about books added manually or f
 
 The app can be used as a web app with forms powered by Flask WTForms or by API (API currently only for data reading, no editing or deleting supported as of yet).
 The front-end was built using Bootstrap 4.6.0. The back-end mostly consists of Flask, Flask-SQLAlchemy, Flask-WTForms, a comprehensive list of requirements is uploaded.
+
 The Library data is stored in SQLite Database.
+
+The displayed books are sorted by Author's name and paginated (up to ten books per page).
 
 ## How to run on a development server
 
