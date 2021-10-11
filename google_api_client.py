@@ -23,8 +23,10 @@ def results_to_db(results):
             isbn = book['industryIdentifiers'][0]['identifier']
             authors = []
             for author in book['authors']:
-                a = (Author(name=author) if not Author.query.filter_by(name=author).first()
-                     else Author.query.filter_by(name=author).first())
+                a = (Author(name=author) if not
+                     Author.query.filter_by(name=author).first()
+                     else Author.query.filter_by(name=author).first()
+                     )
                 db.session.add(a)
                 db.session.commit()
                 authors.append(a)
