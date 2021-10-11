@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 from library import app
 from werkzeug.datastructures import ImmutableMultiDict
-from library.models import Book
+from library.models import Book, Author
 from datetime import date
 
 
@@ -59,8 +59,9 @@ def test_search_google_api_performs_search(monkeypatch):
 
 def test_get_books(monkeypatch):
     db_mock = MagicMock()
+    author = Author(name='Guido')
     db_mock.return_value = [Book(title='a',
-                                 author='a',
+                                 authors=[author],
                                  ISBN=1111111111,
                                  published_date=date(1, 1, 1),
                                  num_pages=1,

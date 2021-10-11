@@ -39,9 +39,12 @@ def get_books():
     books = ds.get_books(request)
     books = list(books)
     for index, book in enumerate(books):
+        authors = []
+        for author in book.authors:
+            authors.append(author.name)
         books[index] = {
             'title': book.title,
-            'authors': book.authors,
+            'authors': authors,
             'published date': book.published_date.strftime('%Y-%m-%d'),
             'ISBN': book.ISBN,
             'page count': book.num_pages,
