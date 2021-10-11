@@ -5,7 +5,8 @@ from library import db
 
 
 def get_books(request):
-    filters = {key: value for key, value in request.args.items() if value}
+    filters = {key: value for key, value in request.args.items()
+               if value and key != 'page'}
     search_type = filters.pop('search', None)
     if 'authors' in filters:
         name = filters.pop('authors')
@@ -36,10 +37,11 @@ def get_books(request):
                 or_(*search_args))
 
         books = books.filter(Book.published_date.between(
-                    min_date, max_date)).all()
+                    min_date, max_date))
     else:
-        books = Book.query.all()
-    return books
+        books = Book.query.join(Book.authors)
+
+    return books.order_by(Author.name.asc())
 
 
 def preprocess_form_authors(form):

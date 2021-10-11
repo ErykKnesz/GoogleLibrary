@@ -1,11 +1,15 @@
+from datetime import datetime
+from urllib.parse import urljoin
+
 import requests
+
 from library.models import Book, Author
 from library import db
-from datetime import datetime
 
 
 def call_google_api(endpoint):
-    full_url = f"https://www.googleapis.com/books/v1/volumes{endpoint}"
+    base_url = "https://www.googleapis.com/books/v1/volumes"
+    full_url = urljoin(base_url, endpoint)
     response = requests.get(full_url)
     response.raise_for_status()
     return response.json()
@@ -19,7 +23,9 @@ def results_to_db(results):
             isbn = book['industryIdentifiers'][0]['identifier']
             authors = []
             for author in book['authors']:
-                a = Author(name=author)
+                a = (Author(name=author) if not Author.query.filter_by(name=author).first()
+                     else Author.query.filter_by(name=author).first())
+                db.session.add(a)
                 db.session.commit()
                 authors.append(a)
             pub_date = book['publishedDate']

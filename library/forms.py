@@ -11,8 +11,8 @@ def unique_check(form, field):
     book = Book.query.filter_by(**filter).first()
     if book:
         if book.id == form.id.data:
-            message = f"""This {field.name} '{field.data}' 
-                      already exists in the database"""
+            message = f"This {field.name} '{field.data}' " \
+                      f"already exists in the database"
             raise ValidationError(message)
 
 
@@ -35,8 +35,8 @@ class BookForm(FlaskForm):
             if isbn == 10 or isbn == 13:
                 pass
             else:
-                message = f"""A valid ISBN number is comprised of 
-                          10 or 13 digits. Currently {isbn}"""
+                message = f"A valid ISBN number is comprised of " \
+                          f"10 or 13 digits. Currently {isbn}"
                 raise ValidationError(message)
         except AttributeError:
             raise ValidationError(f"Not a valid number {original_isbn}")
@@ -44,6 +44,6 @@ class BookForm(FlaskForm):
     def validate_language(form, field):
         lang = field.data
         if len(lang) != 2:
-            message = """Please use 2-letter language codes, e.g 'en' 
-                      as per the standard ISO 639-1"""
+            message = "Please use 2-letter language codes, e.g 'en' " \
+                      "as per the standard ISO 639-1"
             raise ValidationError(message)

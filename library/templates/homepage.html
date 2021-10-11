@@ -30,7 +30,7 @@
     </tr>
   </thead>
   <tbody>
-  {% for book in books %}
+  {% for book in books.items %}
     <tr>
       <th scope="row">{{loop.index}}</th>
       <td>
@@ -86,6 +86,9 @@
     </tr>
   </tbody>
 </table>
+
+{% if books.has_prev %}<a href="{{ url_for('homepage', page=books.prev_num) }}"> previous </a>{% endif %} |
+{% if books.has_next %}<a href="{{ url_for('homepage', page=books.next_num) }}"> next </a>{% endif %}
 
 
 {% endblock %}

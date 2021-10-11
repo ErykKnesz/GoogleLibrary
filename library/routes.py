@@ -1,7 +1,7 @@
 from flask import (render_template, request, redirect, url_for, flash,
                    jsonify, abort, make_response)
 from library import app, db
-from library.models import Book, Author
+from library.models import Book
 from library.forms import BookForm
 import google_api_client as gac
 import database_service as ds
@@ -29,13 +29,33 @@ def add_or_edit_book(book, form, book_id=None):
         'form.html', form=form, errors=errors, book_id=book_id, book=book)
 
 
+@app.route("/api/v1/books", methods=['GET'])
+def get_books():
+    allowed_filters = ['title', 'authors', 'published_date', 'ISBN',
+                       'num_pages', 'cover_url', 'language']
+    for filter in request.args.keys():
+        if filter not in allowed_filters:
+            abort(400)
+    books = ds.get_books(request)
+    books = list(books)
+    for index, book in enumerate(books):
+        books[index] = {
+            'title': book.title,
+            'authors': book.authors,
+            'published date': book.published_date.strftime('%Y-%m-%d'),
+            'ISBN': book.ISBN,
+            'page count': book.num_pages,
+            'cover url': book.cover_url,
+            'language': book.language
+        }
+    return jsonify(books)
+
+
 @app.route('/', methods=['GET'])
 def homepage():
+    page = request.args.get('page', 1, type=int)
     books = ds.get_books(request)
-    if isinstance(books, list):
-        books.sort(key=lambda x: x.authors)
-    else:
-        books.order_by(Book.authors.asc())
+    books = books.paginate(page, 10, False)
     return render_template('homepage.html', books=books)
 
 
@@ -70,28 +90,6 @@ def search_google_api():
             return redirect(url_for('homepage'))
     return render_template('google_search_form.html',
                            search_query=search_query)
-
-
-@app.route("/api/v1/books", methods=['GET'])
-def get_books():
-    allowed_filters = ['title', 'authors', 'published_date', 'ISBN',
-                       'num_pages', 'cover_url', 'language']
-    for filter in request.args.keys():
-        if filter not in allowed_filters:
-            abort(400)
-    books = ds.get_books(request)
-    books = list(books)
-    for index, book in enumerate(books):
-        books[index] = {
-            'title': book.title,
-            'authors': book.authors,
-            'published date': book.published_date.strftime('%Y-%m-%d'),
-            'ISBN': book.ISBN,
-            'page count': book.num_pages,
-            'cover url': book.cover_url,
-            'language': book.language
-        }
-    return jsonify(books)
 
 
 @app.errorhandler(400)
