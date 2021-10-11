@@ -31,8 +31,8 @@ def add_or_edit_book(book, form, book_id=None):
 
 @app.route("/api/v1/books", methods=['GET'])
 def get_books():
-    allowed_filters = ['title', 'authors', 'published_date', 'ISBN',
-                       'num_pages', 'cover_url', 'language']
+    allowed_filters = ['title', 'authors', 'min date', 'max date', 'ISBN',
+                       'num_pages', 'cover_url', 'language', 'search']
     for filter in request.args.keys():
         if filter not in allowed_filters:
             abort(400)
