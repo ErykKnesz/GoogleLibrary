@@ -18,9 +18,9 @@ def get_books(request):
             if 'name' in filters:
                 name = filters.pop('name')
             books = Book.query.filter_by(
-                **filters)
+                **filters).join(Book.authors)
             try:
-                books = books.join(Book.authors).filter_by(name=name)
+                books = books.filter_by(name=name)
             except UnboundLocalError:
                 pass
 

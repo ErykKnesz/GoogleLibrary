@@ -22,7 +22,3 @@ def test_search(monkeypatch):
     search_query = ImmutableMultiDict([('q', ''), ('intitle', 'lalka')])
     result = gac.search(search_query)
     assert mock_result == result
-
-
-def test_results_to_db():
-    pass
