@@ -16,7 +16,7 @@ class Book(db.Model):
                               secondary=association_table,
                               backref=db.backref('books', lazy=True))
     published_date = db.Column(db.Date(), nullable=False)
-    ISBN = db.Column(db.Integer, nullable=False, unique=True)
+    ISBN = db.Column(db.String(16), nullable=False, unique=True)
     num_pages = db.Column(db.Integer, nullable=False)
     cover_url = db.Column(db.Text)
     language = db.Column(db.String(2), nullable=False)

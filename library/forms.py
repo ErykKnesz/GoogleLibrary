@@ -22,7 +22,7 @@ class BookForm(FlaskForm):
     authors = StringField('authors', validators=[InputRequired()])
     published_date = DateField('Published date', validators=[
         InputRequired()])
-    ISBN = IntegerField('ISBN', validators=[InputRequired(), unique_check])
+    ISBN = StringField('ISBN', validators=[InputRequired(), unique_check])
     num_pages = IntegerField('Pages', validators=[InputRequired()])
     cover_url = TextAreaField("Link to the cover", validators=[
         Optional(), URL(message="Enter Valid URL Please.")])
@@ -31,7 +31,7 @@ class BookForm(FlaskForm):
     def validate_ISBN(form, field):
         original_isbn = field.data
         try:
-            isbn = len(str(original_isbn))
+            isbn = len(original_isbn)
             if isbn == 10 or isbn == 13:
                 pass
             else:
@@ -47,3 +47,11 @@ class BookForm(FlaskForm):
             message = "Please use 2-letter language codes, e.g 'en' " \
                       "as per the standard ISO 639-1"
             raise ValidationError(message)
+
+
+def enlist_errors(form_errors: dict):
+    errors = ""
+    for k, v in form_errors.items():
+        error = "- " + k + ": " + str(v).strip('[]') + ",\n"
+        errors += error
+    return errors
